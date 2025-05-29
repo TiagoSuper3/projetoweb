@@ -1,1 +1,32 @@
-# projetoweb
+# 🎮 Recomendador de Jogos por Humor
+
+## 👤 Autor
+**Tiago Braga**
+
+---
+
+## 🧠 Tema
+Aplicação web interativa que recomenda jogos baseados no humor e desejo do utilizador.
+
+---
+
+## 💡 Ideia da Funcionalidade e da Interface
+
+O utilizador descreve como está a sentir-se e o que gostaria de jogar. A aplicação interpreta essa entrada com ajuda de uma API de IA, classifica o humor, e sugere géneros de jogos compatíveis com o estado emocional do utilizador.
+
+A interface apresenta:
+- Um campo de texto para o utilizador escrever como se sente.
+- Um botão para gerar recomendações.
+- Um fundo dinâmico com cores e transições suaves que refletem o humor identificado.
+- Recomendações de jogos disponíveis na plataforma Poki, com links para jogar.
+
+---
+
+## 🌐 Web APIs Utilizadas
+
+- **[OpenRouter.ai](https://openrouter.ai/)**: API compatível com OpenAI usada para interpretar o texto do utilizador e devolver o humor, objetivo emocional e géneros de jogo sugeridos.
+- **[Poki](https://poki.com/)** (via links): Plataforma de jogos online. Os jogos são abertos em nova aba com base no género recomendado.
+- **[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)**: Para fazer chamadas HTTP do frontend para o backend e para a API da IA.
+- **[Node.js + Express](https://expressjs.com/)**: Backend leve para servir os ficheiros estáticos e fazer proxy das chamadas à API de IA com segurança (escondendo a chave de API).
+
+---
