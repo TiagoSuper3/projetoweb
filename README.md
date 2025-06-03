@@ -25,7 +25,7 @@ A interface apresenta:
 ## 🌐 Web APIs Utilizadas
 
 - **[OpenRouter.ai](https://openrouter.ai/)**: API compatível com OpenAI usada para interpretar o texto do utilizador e devolver o humor, objetivo emocional e géneros de jogo sugeridos.
-- **[Poki](https://poki.com/)** (via links): Plataforma de jogos online. Os jogos são abertos em nova aba com base no género recomendado.
+- **[IMDB](https://api-docs.igdb.com/#getting-started/)**: API de jogos.
 - **[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)**: Para fazer chamadas HTTP do frontend para o backend e para a API da IA.
 - **[Node.js + Express](https://expressjs.com/)**: Backend leve para servir os ficheiros estáticos e fazer proxy das chamadas à API de IA com segurança (escondendo a chave de API).
 

@@ -3,25 +3,6 @@ const userInput = document.getElementById("userInput");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
 
-const gameLibrary = [
-  {
-    title: "Calm Puzzle",
-    genres: ["relaxing", "puzzle", "casual"],
-    iframe: "https://poki.com/embed/game/twenty48-solitaire"
-  },
-  {
-    title: "Fast Action Game",
-    genres: ["fast", "action", "arcade"],
-    iframe: "https://poki.com/embed/game/stickman-hook"
-  },
-  {
-    title: "Funny Stress Relief",
-    genres: ["funny", "casual", "stress relief"],
-    iframe: "https://poki.com/embed/game/elastic-man"
-  }
-];
-
-
 let currentBg = 1;
 
 function updateBackgroundByMood(mood) {
@@ -54,8 +35,7 @@ function updateBackgroundByMood(mood) {
   }
 }
 
-
-async function getGenresFromAI(userText) {
+async function getGamesFromAI(userText) {
   const response = await fetch("/api/ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -63,21 +43,7 @@ async function getGenresFromAI(userText) {
   });
 
   const result = await response.json();
-  let content = result.choices?.[0]?.message?.content || "{}";
-  content = content.replace(/```json|```/g, '').trim();
-
-  console.log(content);
-
-  try {
-    return JSON.parse(content);
-  } catch (e) {
-    console.error("Parse error:", e);
-    return {
-      mood: "neutral",
-      desired_feeling: "fun",
-      recommended_genres: ["casual"]
-    };
-  }
+  return result;
 }
 
 submitBtn.addEventListener("click", async () => {
@@ -87,25 +53,30 @@ submitBtn.addEventListener("click", async () => {
   results.innerHTML = "";
   loading.classList.remove("hidden");
 
-  const result = await getGenresFromAI(input);
-  const recommendedGenres = result.recommended_genres || [];
+  const { mood, genres, games } = await getGamesFromAI(input);
 
-  updateBackgroundByMood(result.mood || "neutral");
+  updateBackgroundByMood(mood || "neutral");
 
-  const matchedGames = gameLibrary.filter(game =>
-    game.genres.some(g => recommendedGenres.includes(g))
-  );
-
-  if (matchedGames.length === 0) {
+  if (!games || games.length === 0) {
     results.innerHTML = "<p>No matching games found. Try a different mood!</p>";
   } else {
-    matchedGames.forEach(game => {
+    games.forEach(game => {
       const card = document.createElement("div");
       card.className = "game-card";
+
+      const cover = game.cover?.url
+        ? `https:${game.cover.url.replace("t_thumb", "t_cover_big")}`
+        : "https://via.placeholder.com/264x374?text=No+Image";
+
+      const slug = game.slug || game.name.toLowerCase().replace(/\s+/g, "-");
+
       card.innerHTML = `
-        <h3>${game.title}</h3>
-        <iframe src="${game.iframe}" loading="lazy"></iframe>
+        <h3>${game.name}</h3>
+        <img src="${cover}" alt="${game.name}" />
+        <p>${game.summary || "No description available."}</p>
+        <a href="https://www.igdb.com/games/${slug}" target="_blank">View on IGDB</a>
       `;
+
       results.appendChild(card);
     });
   }
