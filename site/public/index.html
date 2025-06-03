@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood-Based Game Recommender</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="background1" class="background-layer"></div>
+  <div id="background2" class="background-layer"></div>
+
+  <div class="container">
+    <h1>What do you feel like playing today?</h1>
+    <textarea id="userInput" placeholder="Tell us how you're feeling..."></textarea>
+    <button id="submitBtn">Find Games</button>
+
+    <div id="loading" class="hidden">Thinking...</div>
+    <div id="results" class="game-list"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
