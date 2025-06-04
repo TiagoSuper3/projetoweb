@@ -1,5 +1,9 @@
 # 🎮 Recomendador de Jogos por Humor
 
+# Para testar o site, e para apresentação:
+
+https://projetoweb-backend.onrender.com
+
 ## 👤 Autor
 **Tiago Braga**
 
