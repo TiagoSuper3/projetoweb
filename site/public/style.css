@@ -23,9 +23,8 @@ html, body {
 
 .container {
   position: relative;
-  z-index: 1;
-  max-width: 800px;     /* reasonable width */
-  margin: 0 auto;        /* center horizontally */
+  max-width: 800px;
+  margin: 0 auto;
   padding: 2rem;
   text-align: center;
   color: white;
@@ -91,3 +90,48 @@ button:hover {
   border: none;
   border-radius: 6px;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #444;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #00b09b;
+}
+
+#loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  margin: 2rem 0;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid #00b09b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+

@@ -65,15 +65,28 @@ app.post("/api/ai", async (req, res) => {
   console.log("📩 User Input:", userText);
 
   const prompt = `
-  User said: "${userText}"
-  What is their mood, what do they want to feel, and what genres of games would match?
-  Respond with JSON like:
+  You are a video game genre assistant.
+
+  Your task is to:
+  1. Read the user's input — which may be in any language and include their emotions and what type of game they feel like playing.
+  2. If the input is not in English, **translate it** first.
+  3. Extract:
+    - Their mood (emotion): e.g. happy, calm, excited, frustrated
+    - Their desired emotional experience: e.g. thrill, relaxation, focus, adrenaline, creativity
+    - 2–3 **real** video game genres that best match what they want (e.g. simulation, racing, puzzle)
+  4. Avoid vague genres like "arcade" or "cool" unless the user explicitly says them.
+  5. Be creative but **accurate and practical** — return genres that can be queried from a database.
+  6. Respond ONLY in this exact JSON format, no other text:
+
   {
-    "mood": "excited",
-    "desired_feeling": "fun",
-    "recommended_genres": ["racing", "arcade"]
+    "mood": "...",
+    "desired_feeling": "...",
+    "recommended_genres": ["...", "..."]
   }
+
+  User input: "${userText}"
   `;
+
 
   try {
     // Call OpenRouter (AI)
@@ -89,7 +102,8 @@ app.post("/api/ai", async (req, res) => {
       body: JSON.stringify({
         model: "gpt-4o",
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
+        temperature: 0.9,  // higher = more diverse
+        top_p: 0.9,
         max_tokens: 400
       })
     });
@@ -117,6 +131,8 @@ app.post("/api/ai", async (req, res) => {
     }
 
     // Fetch games from IGDB
+    const randomOffset = Math.floor(Math.random() * 100); // 100 to 200+ for wider variety
+
     const igdbRes = await fetch("https://api.igdb.com/v4/games", {
       method: "POST",
       headers: {
@@ -124,10 +140,15 @@ app.post("/api/ai", async (req, res) => {
         "Authorization": `Bearer ${IGDB_ACCESS_TOKEN}`
       },
       body: `
-        fields name, summary, cover.url, genres.name, url;
-        where genres = (${genreIDs.join(",")}) & cover != null;
-        sort popularity desc;
+        fields name, summary, cover.url, genres.name, url, slug, rating, first_release_date;
+        where genres = (${genreIDs.join(",")})
+          & cover != null
+          & rating != null
+          & rating > 60
+          & first_release_date != null;
+        sort rating desc;
         limit 10;
+        offset ${randomOffset};
       `
     });
 

@@ -2,6 +2,7 @@ const submitBtn = document.getElementById("submitBtn");
 const userInput = document.getElementById("userInput");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
+const pagination = document.getElementById("pagination");
 
 let currentBg = 1;
 
@@ -46,40 +47,65 @@ async function getGamesFromAI(userText) {
   return result;
 }
 
-submitBtn.addEventListener("click", async () => {
-  const input = userInput.value.trim();
-  if (!input) return;
+let lastInputText = "";
+
+async function loadGames(input, page = 0) {
+  lastInputText = input;
 
   results.innerHTML = "";
-  loading.classList.remove("hidden");
+  loading.style.display = "flex"; // show spinner
 
-  const { mood, genres, games } = await getGamesFromAI(input);
+  const response = await fetch(`/api/ai?page=${page}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: input })
+  });
 
+  const { mood, genres, games } = await response.json();
   updateBackgroundByMood(mood || "neutral");
 
   if (!games || games.length === 0) {
-    results.innerHTML = "<p>No matching games found. Try a different mood!</p>";
+    results.innerHTML = "<p>No matching games found.</p>";
   } else {
     games.forEach(game => {
       const card = document.createElement("div");
       card.className = "game-card";
-
       const cover = game.cover?.url
         ? `https:${game.cover.url.replace("t_thumb", "t_cover_big")}`
         : "https://via.placeholder.com/264x374?text=No+Image";
-
-      const slug = game.slug || game.name.toLowerCase().replace(/\s+/g, "-");
 
       card.innerHTML = `
         <h3>${game.name}</h3>
         <img src="${cover}" alt="${game.name}" />
         <p>${game.summary || "No description available."}</p>
-        <a href="https://www.igdb.com/games/${slug}" target="_blank">View on IGDB</a>
+        <a href="https://www.igdb.com/games/${game.slug}" target="_blank">View on IGDB</a>
       `;
-
       results.appendChild(card);
     });
+
+    showPaginationControls(page);
   }
 
-  loading.classList.add("hidden");
+  loading.style.display = "none";  // hide spinner
+}
+
+submitBtn.addEventListener("click", () => {
+  const input = userInput.value.trim();
+  if (input) { 
+    loadGames(input, 0);
+    pagination.innerHTML = "";
+  }
 });
+
+function showPaginationControls(currentPage, totalPages = 5) {
+  pagination.innerHTML = "";
+
+  for (let i = 0; i < totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.className = (i === currentPage) ? "active" : "";
+    btn.onclick = () => loadGames(lastInputText, i);
+    pagination.appendChild(btn);
+  }
+}
+
