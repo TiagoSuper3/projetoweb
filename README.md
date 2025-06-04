@@ -12,13 +12,13 @@ Aplicação web interativa que recomenda jogos baseados no humor e desejo do uti
 
 ## 💡 Ideia da Funcionalidade e da Interface
 
-O utilizador descreve como está a sentir-se e o que gostaria de jogar. A aplicação interpreta essa entrada com ajuda de uma API de IA, classifica o humor, e sugere géneros de jogos compatíveis com o estado emocional do utilizador.
+O utilizador descreve como está a sentir-se e o que gostaria de jogar. A aplicação interpreta essa entrada com ajuda de uma API de IA, classifica o humor, altera a "mood" do site consoante a classificação e sugere géneros de jogos compatíveis com o estado emocional do utilizador.
 
 A interface apresenta:
 - Um campo de texto para o utilizador escrever como se sente.
 - Um botão para gerar recomendações.
 - Um fundo dinâmico com cores e transições suaves que refletem o humor identificado.
-- Recomendações de jogos disponíveis na plataforma Poki, com links para jogar.
+- Recomendações de jogos disponíveis na api IMDB, com links para visualizar os detalhes mais específicos do jogo no site do IMDB.
 
 ---
 
